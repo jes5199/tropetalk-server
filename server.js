@@ -43,14 +43,19 @@ function respond(text, res) {
     const depth = 10;
     const subdirs = filename.split("", depth).join("/");
     const directory = "./files/" + subdirs;
-    mkdirp(directory);
+    console.log(`making directory ${directory}`)
+    mkdirp.sync(directory);
 
     const relativepath = directory + "/" + filename;
+    console.log(`looking for file ${relativepath}`);
     fs.realpath(relativepath, (err, resolvedPath) => {
       let path = resolvedPath;
       if (err) {
         if (err.code == "ENOENT") {
-          path = err.path;
+	  if (err.path) {
+            path = err.path;
+	  }
+	  console.log(`need to make file ${path}`);
           const auPath = path.replace(".wav", ".au");
 
           console.log(`tropesay.sh ${auPath}`)
@@ -61,6 +66,7 @@ function respond(text, res) {
             const sox = spawn('sox', [auPath, path]);
 
             sox.on('close', (soxCode) => {
+	      console.log(`sending new file ${path}`);
               res.sendFile(path);
             });
             sox.stdin.end();
@@ -76,6 +82,7 @@ function respond(text, res) {
         }
       }
 
+      console.log(`sending existing file ${path}`);
       res.sendFile(path);
 
     });
