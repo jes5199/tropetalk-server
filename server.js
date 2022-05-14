@@ -28,8 +28,7 @@ db.exec(`
 db.exec(`CREATE UNIQUE INDEX IF NOT EXISTS uniqueText ON sayings (text)`);
 db.exec(`CREATE UNIQUE INDEX IF NOT EXISTS uniqueText ON sayings (file)`);
 
-app.post('/tropesay', (req, res) => {
-  const text = req.body.text;
+function respond(text, res) {
   db.all("select file from sayings where text = ?", text, (err, rows) => {
     let filename = null;
     if (rows && rows.length > 0) {
@@ -81,7 +80,19 @@ app.post('/tropesay', (req, res) => {
 
     });
   });
+}
+
+
+app.post('/tropesay', (req, res) => {
+  const text = req.body.text;
+  respond(text, res);
 })
+
+app.get('/tropesay', (req, res) => {
+  const text = req.query.text;
+  respond(text, res);
+})
+
 
 const port = 3001;
 
