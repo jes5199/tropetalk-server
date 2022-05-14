@@ -90,22 +90,21 @@ function respond(text, res) {
 }
 
 
-app.post('/tropesay', (req, res) => {
+app.post('/tropetalk', (req, res) => {
   const text = req.body.text;
   respond(text, res);
 })
 
-app.get('/tropesay', (req, res) => {
-  const text = req.query.text;
+app.get('/tropetalk', (req, res) => {
+  const text = req.query.say;
   console.log(req.query);
   if (text) {
     respond(text, res);
   } else {
     res.status(400);
-    res.send("query param 'text' is required");
+    res.send("query param 'say' is required");
   }
 })
-
 
 const port = 3001;
 
