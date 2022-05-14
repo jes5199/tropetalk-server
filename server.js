@@ -90,7 +90,13 @@ app.post('/tropesay', (req, res) => {
 
 app.get('/tropesay', (req, res) => {
   const text = req.query.text;
-  respond(text, res);
+  console.log(req.query);
+  if (text) {
+    respond(text, res);
+  } else {
+    res.status(400);
+    res.send("query param 'text' is required");
+  }
 })
 
 
